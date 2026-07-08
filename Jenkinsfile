@@ -13,15 +13,22 @@ pipeline {
             }
         }
         stage('SonarQube Analysis') {
-            steps {
+             steps {
                 script {
                     def scannerHome = tool 'SonarScanner'
 
                     withSonarQubeEnv('SonarQube') {
-                        sh "${scannerHome}/bin/sonar-scanner"
+
+                        sh """
+                        ${scannerHome}/bin/sonar-scanner \
+                        -Dsonar.projectKey=Chat \
+                        -Dsonar.projectName=Chat \
+                        -Dsonar.sources=. \
+                        -Dsonar.sourceEncoding=UTF-8
+                          """
                     }
                 }
-            }
+             }
         }
     }
 }
