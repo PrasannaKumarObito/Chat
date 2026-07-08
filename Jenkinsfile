@@ -52,5 +52,14 @@ pipeline {
                 sh 'trivy image ${Obito} >> app-report.txt'
             }
         }
+        stage('tag and push') {
+            steps {
+                script {
+                    withDockerRegistry(credentialsId: 'Docker') {
+                        sh 'docker tag ${Obito} obitomanu/yuvi:AI-Chat'
+                    }
+                }
+            }
+        }
     }
 }
