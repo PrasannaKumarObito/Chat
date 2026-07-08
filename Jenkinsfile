@@ -57,6 +57,7 @@ pipeline {
                 script {
                     withDockerRegistry(credentialsId: 'Docker') {
                         sh 'docker tag ${Obito} obitomanu/yuvi:AI-Chat'
+                        sh 'docker push obitomanu/yuvi:AI-Chat'
                     }
                 }
             }
