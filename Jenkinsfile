@@ -47,5 +47,10 @@ pipeline {
                  '''  
             }
         }
+        stage('ImageScan'){
+            steps{
+                sh 'trivy image ${Obito} >> app-report.txt'
+            }
+        }
     }
 }
