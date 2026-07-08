@@ -37,7 +37,6 @@ pipeline {
           stage('Quality Gate') {
             steps {
                 waitForQualityGate abortPipeline: false, credentialsId: 'Sonar-token'
-                }
             }
         }
         stage('build image'){
