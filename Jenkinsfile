@@ -8,4 +8,11 @@ pipeline {
             }
         }
     }
+    stages {
+        stage('checkOut') {
+            steps {
+                git branch: 'main', url: 'https://github.com/PrasannaKumarObito/Chat.git'
+            }
+        }
+    }
 }
