@@ -1,5 +1,9 @@
 pipeline {
     agent any
+    
+    environment{
+        Obito="chat:${GIT_COMMIT}"
+    }
 
     stages {
         stage('CleanWS') {
@@ -30,11 +34,19 @@ pipeline {
                 }
              }
         }
-        stage('Quality Gate') {
+          stage('Quality Gate') {
             steps {
-                script {
-                    waitForQualityGate abortPipeline: false, credentialsId: 'Sonar-token'
+                timeout(time: 5, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
                 }
+            }
+        }
+        stage('build image'){
+            steps {
+                sh '''
+                   printenv
+                   docker build -t ${Obito} .
+                 '''  
             }
         }
     }
