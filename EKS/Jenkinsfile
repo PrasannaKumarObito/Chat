@@ -33,7 +33,7 @@ pipeline {
             steps {
                 sh '''
                     pwd
-                    cd terraform/eks/
+                    cd eks/
                     terraform init
                     terraform plan -out tfplan
                     terraform show -no-color tfplan > tfplan.txt
