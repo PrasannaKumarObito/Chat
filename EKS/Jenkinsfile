@@ -77,14 +77,14 @@ pipeline {
                     if (params.terraformAction == 'apply') {
 
                         sh '''
-                            cd terraform/eks/
+                            cd EKS/
                             terraform apply -input=false tfplan
                         '''
 
                     } else if (params.terraformAction == 'destroy') {
 
                         sh '''
-                            cd terraform/eks/
+                            cd EKS/
                             terraform destroy -auto-approve
                         '''
                     }
