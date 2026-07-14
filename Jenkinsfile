@@ -15,12 +15,12 @@ pipeline {
         stage('SonarQube Analysis') {
              steps {
                 script {
-                    def scannerHome = tool 'SonarScanner'
+                    def scannerHome = tool 'Sonar'
 
                     withSonarQubeEnv('SonarQube') {
 
                         sh """
-                        ${scannerHome}/bin/sonar \
+                        ${scannerHome}/bin/sonar-scanner \
                         -Dsonar.projectKey=Chat \
                         -Dsonar.projectName=Chat \
                         -Dsonar.sources=. \
