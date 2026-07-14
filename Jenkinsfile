@@ -20,7 +20,7 @@ pipeline {
                     withSonarQubeEnv('SonarQube') {
 
                         sh """
-                        ${scannerHome}/bin/sonar-scanner \
+                        ${scannerHome}/bin/sonar \
                         -Dsonar.projectKey=Chat \
                         -Dsonar.projectName=Chat \
                         -Dsonar.sources=. \
