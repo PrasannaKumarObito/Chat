@@ -2,9 +2,8 @@ pipeline {
     agent any
 
     environment {
-        obito="AI-Chat${GIT-COMMIT}"
+        obito="AI-Chat:${GIT-COMMIT}"
     }
-
     stages {
         stage('cleanWs') {
             steps {
@@ -47,5 +46,6 @@ pipeline {
                 '''
             }
         }
+
     }
 }
