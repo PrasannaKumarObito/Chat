@@ -21,8 +21,8 @@ pipeline {
 
                 sh """
                 ${scannerHome}/bin/sonar-scanner \
-                  -Dsonar.projectKey=Chat \
-                  -Dsonar.projectName=Chat \
+                  -Dsonar.projectKey=AI-Chat \
+                  -Dsonar.projectName=AI-Chat \
                   -Dsonar.sources=. \
                   -Dsonar.sourceEncoding=UTF-8
                 """
