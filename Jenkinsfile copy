@@ -2,7 +2,7 @@ pipeline {
     agent any
     
     environment{
-        Obito="chat:${GIT_COMMIT}"
+        obito="chat:${GIT_COMMIT}"
     }
 
     stages {
@@ -43,7 +43,7 @@ pipeline {
             steps {
                 sh '''
                    printenv
-                   docker build -t ${Obito} .
+                   docker build -t ${obito} .
                  '''  
             }
         }
