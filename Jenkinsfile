@@ -2,9 +2,9 @@ pipeline {
     agent any
 
     stages {
-        stage('clenaWs') {
+        stage('cleanWs') {
             steps {
-                clanWs()
+                cleanWs()
             }
         }
     }
