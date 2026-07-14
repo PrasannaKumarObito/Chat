@@ -7,5 +7,10 @@ pipeline {
                 cleanWs()
             }
         }
+        stage('git checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/PrasannaKumarObito/Chat.git'
+            }
+        }
     }
 }
