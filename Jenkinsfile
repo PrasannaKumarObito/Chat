@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        obito="AI-Chat${GIT-COMMIT}"
+    }
+
     stages {
         stage('cleanWs') {
             steps {
@@ -33,6 +37,14 @@ pipeline {
         stage('Quality Gate') {
             steps {
                 waitForQualityGate abortPipeline: false, credentialsId: 'Sonar'
+            }
+        }
+        stage('Build-Iamge') {
+            steps {
+                sh '''
+                printenv
+                docker build -t ${obito} .
+                '''
             }
         }
     }
