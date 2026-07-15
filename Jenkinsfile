@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        obito="ai-chat:${GIT_COMMIT}"
+        obito="AI-Chat:${GIT_COMMIT}"
     }
     stages {
         stage('cleanWs') {
@@ -48,6 +48,7 @@ pipeline {
         }
         stage('Iamge Scan'){
             steps {
+                sh 'curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sudo sh -s -- -b /usr/local/bin v0.72.0'
                 sh 'trivy image ${obito} >> app-report.txt'
             }
         }
