@@ -61,5 +61,13 @@ pipeline {
                 }
             }
         }
+        stage('Cluster-update') {
+            steps {
+                sh '''
+                aws eks update-kubeconfig \
+                --region us-east-1 \
+                --name obito-cluster
+            }
+        }
     }
 }
