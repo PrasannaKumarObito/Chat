@@ -80,5 +80,8 @@ pipeline {
                 withKubeConfig(caCertificate: '', clusterName: ' obito-cluster', contextName: '', credentialsId: 'kube', namespace: 'obito', restrictKubeConfigAccess: false, serverUrl: 'https://25A46D23363173D176599E57083115DC.gr7.us-east-1.eks.amazonaws.com') {
                     sh "kubectl get pods -n ${NAMESPACE}"
                     sh "kubectl get svc -n ${NAMESPACE}"
+                }
+            }
+        }
     }
 }
