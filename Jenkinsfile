@@ -81,7 +81,7 @@ pipeline {
                         sed -i 's|replace|${obito}|g' Deployment.yml
                         grep image Deployment.yml
                         kubectl apply -f Deployment.yml -n ${NAMESPACE}
-                        """
+                        '''
                 }
             }
         }
