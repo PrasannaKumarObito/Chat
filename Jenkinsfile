@@ -4,6 +4,10 @@ pipeline {
    environment {
     obito = "obitomanu/yuvi:ai-chat-${GIT_COMMIT}"
     NAMESPACE = "obito"
+   }
+   environment {
+    obito = "obitomanu/yuvi:ai-chat-${GIT_COMMIT}"
+    NAMESPACE = "obito"
 }
     stages {
         stage('cleanWs') {
@@ -54,12 +58,7 @@ pipeline {
         }
         stage('tag and push') {
             steps {
-                script {
-                    withDockerRegistry(credentialsId: 'Docker') {
-                        sh 'docker tag ${obito} obitomanu/yuvi:AI-Chat'
-                        sh 'docker push obitomanu/yuvi:AI-Chat'
-                    }
-                }
+                sh 'docker push ${obito}'
             }
         }
         // stage('Cluster-update') {
@@ -78,8 +77,11 @@ pipeline {
         stage('Verify the deployment') {
             steps {
                 withKubeConfig(caCertificate: '', clusterName: ' obito-cluster', contextName: '', credentialsId: 'kube', namespace: 'obito', restrictKubeConfigAccess: false, serverUrl: 'https://25A46D23363173D176599E57083115DC.gr7.us-east-1.eks.amazonaws.com') {
-                    sh "kubectl get pods -n ${NAMESPACE}"
-                    sh "kubectl get svc -n ${NAMESPACE}"
+                   sh '''
+                        sed -i 's|replace|${obito}|g' Deployment.yml
+                        grep image Deployment.yml
+                        kubectl apply -f Deployment.yml -n ${NAMESPACE}
+                        """
                 }
             }
         }
