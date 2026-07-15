@@ -4,10 +4,6 @@ pipeline {
    environment {
     obito = "obitomanu/yuvi:ai-chat-${GIT_COMMIT}"
     NAMESPACE = "obito"
-   }
-   environment {
-    obito = "obitomanu/yuvi:ai-chat-${GIT_COMMIT}"
-    NAMESPACE = "obito"
 }
     stages {
         stage('cleanWs') {
