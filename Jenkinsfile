@@ -49,9 +49,7 @@ pipeline {
         }
         stage('Iamge Scan'){
             steps {
-                sh ...
-                trivy image ${obito} >> app-report.txt
-                 ...
+                sh 'trivy image ${obito} >> app-report.txt'
             }
         }
         stage('tag and push') {
