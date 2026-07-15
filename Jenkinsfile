@@ -2,7 +2,7 @@ pipeline {
     agent any
 
    environment {
-    obito = "obitomanu/yuvi:ai-chat-${GIT_COMMIT}"
+    Iamge = "obitomanu/yuvi:AI-Chat-${GIT_COMMIT}"
     NAMESPACE = "obito"
 }
     stages {
@@ -43,20 +43,22 @@ pipeline {
             steps {
                 sh '''
                 printenv
-                docker build -t ${obito} .
+                docker build -t ${Image} .
                 '''
             }
         }
         stage('Iamge Scan'){
             steps {
-                sh 'trivy image ${obito} >> app-report.txt'
+                sh 'trivy image ${Image} >> app-report.txt'
             }
         }
         stage('tag and push') {
             steps {
                 script {
                     withDockerRegistry(credentialsId: 'Docker') {
-                    sh 'docker push ${obito}'
+                    sh '''
+                        docker push ${Image}
+                        '''
                     }
             }
         }
@@ -64,19 +66,17 @@ pipeline {
         stage('Deploying EKS cluster') {
             steps {
                 withKubeConfig(caCertificate: '', clusterName: ' obito-cluster', contextName: '', credentialsId: 'kube', namespace: 'obito', restrictKubeConfigAccess: false, serverUrl: 'https://25A46D23363173D176599E57083115DC.gr7.us-east-1.eks.amazonaws.com') {
-                     sh """
-                        sed -i 's|replace|${obito}|g' Deployment.yml
-                        grep image Deployment.yml
-                        kubectl apply -f Deployment.yml -n ${NAMESPACE}
-                        """
+                     sh "sed -i 's|replace|${Image}|g' Deployment.yml"
+                     sh "grep image Deployment.yml"
+                     sh "kubectl apply -f Deployment.yml -n ${NAMESPACE}"
                 }
             }
         }
         stage('Verify the deployment') {
             steps {
                 withKubeConfig(caCertificate: '', clusterName: ' obito-cluster', contextName: '', credentialsId: 'kube', namespace: 'obito', restrictKubeConfigAccess: false, serverUrl: 'https://25A46D23363173D176599E57083115DC.gr7.us-east-1.eks.amazonaws.com') {
-                   sh 'kubectl get pods -n ${NAMESPACE}'
-                    sh 'kubectl get svc -n ${NAMESPACE}'
+                   sh "kubectl get pods -n ${NAMESPACE}"
+                    sh "kubectl get svc -n ${NAMESPACE}"
                 }
             }
         }
