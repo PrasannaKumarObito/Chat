@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         obito="ai-chat:${GIT_COMMIT}"
+        NAMESPACE    = "obito"
     }
     stages {
         stage('cleanWs') {
@@ -61,10 +62,23 @@ pipeline {
                 }
             }
         }
-        stage('Cluster-update') {
+        // stage('Cluster-update') {
+        //     steps {
+        //         sh 'aws eks update-kubeconfig --region us-east-1 --name obito-cluster'
+        //     }
+        // }
+        stage('Deploying EKS cluster') {
             steps {
-                sh 'aws eks update-kubeconfig --region us-east-1 --name obito-cluster'
+                withKubeConfig(caCertificate: '', clusterName: ' obito-cluster', contextName: '', credentialsId: 'kube', namespace: 'obito', restrictKubeConfigAccess: false, serverUrl: 'https://25A46D23363173D176599E57083115DC.gr7.us-east-1.eks.amazonaws.com') {
+                     sh "sed -i 's|replace|${obito}|g' Deployment.yml"
+                    sh "kubectl apply -f Deployment.yml -n ${NAMESPACE}"
+                }
             }
         }
+        stage('Verify the deployment') {
+            steps {
+                withKubeConfig(caCertificate: '', clusterName: ' obito-cluster', contextName: '', credentialsId: 'kube', namespace: 'obito', restrictKubeConfigAccess: false, serverUrl: 'https://25A46D23363173D176599E57083115DC.gr7.us-east-1.eks.amazonaws.com') {
+                    sh "kubectl get pods -n ${NAMESPACE}"
+                    sh "kubectl get svc -n ${NAMESPACE}"
     }
 }
