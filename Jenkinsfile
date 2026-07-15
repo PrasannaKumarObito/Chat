@@ -2,7 +2,7 @@ pipeline {
     agent any
 
    environment {
-    Image = "obitomanu/yuvi:AI-Chat-${GIT_COMMIT}"
+    IMAGE = "obitomanu/yuvi:AI-Chat-${GIT_COMMIT}"
     NAMESPACE = "obito"
 }
     stages {
@@ -43,13 +43,13 @@ pipeline {
             steps {
                 sh '''
                 printenv
-                docker build -t ${Image} .
+                docker build -t ${IMAGE} .
                 '''
             }
         }
         stage('Iamge Scan'){
             steps {
-                sh 'trivy image ${Image} >> app-report.txt'
+                sh 'trivy image ${IMAGE} >> app-report.txt'
             }
         }
         stage('tag and push') {
@@ -57,7 +57,7 @@ pipeline {
                 script {
                     withDockerRegistry(credentialsId: 'Docker') {
                     sh '''
-                        docker push ${Image}
+                        docker push ${IMAGE}
                         '''
                     }
             }
@@ -65,8 +65,8 @@ pipeline {
         }
         stage('Deploying EKS cluster') {
             steps {
-                withKubeConfig(caCertificate: '', clusterName: ' obito-cluster', contextName: '', credentialsId: 'kube', namespace: 'obito', restrictKubeConfigAccess: false, serverUrl: 'https://25A46D23363173D176599E57083115DC.gr7.us-east-1.eks.amazonaws.com') {
-                     sh "sed -i 's|replace|${Image}|g' Deployment.yml"
+                withKubeConfig(caCertificate: '', clusterName: 'obito-cluster', contextName: '', credentialsId: 'kube', namespace: 'obito', restrictKubeConfigAccess: false, serverUrl: 'https://25A46D23363173D176599E57083115DC.gr7.us-east-1.eks.amazonaws.com') {
+                     sh "sed -i 's|replace|${IMAGE}|g' Deployment.yml"
                      sh "grep image Deployment.yml"
                      sh "kubectl apply -f Deployment.yml -n ${NAMESPACE}"
                 }
@@ -74,7 +74,7 @@ pipeline {
         }
         stage('Verify the deployment') {
             steps {
-                withKubeConfig(caCertificate: '', clusterName: ' obito-cluster', contextName: '', credentialsId: 'kube', namespace: 'obito', restrictKubeConfigAccess: false, serverUrl: 'https://25A46D23363173D176599E57083115DC.gr7.us-east-1.eks.amazonaws.com') {
+                withKubeConfig(caCertificate: '', clusterName: 'obito-cluster', contextName: '', credentialsId: 'kube', namespace: 'obito', restrictKubeConfigAccess: false, serverUrl: 'https://25A46D23363173D176599E57083115DC.gr7.us-east-1.eks.amazonaws.com') {
                    sh "kubectl get pods -n ${NAMESPACE}"
                     sh "kubectl get svc -n ${NAMESPACE}"
                 }
