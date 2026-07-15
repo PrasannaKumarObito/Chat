@@ -1,10 +1,10 @@
 pipeline {
     agent any
 
-    environment {
-        obito="ai-chat:${GIT_COMMIT}"
-        NAMESPACE    = "obito"
-    }
+   environment {
+    obito = "obitomanu/yuvi:ai-chat-${GIT_COMMIT}"
+    NAMESPACE = "obito"
+}
     stages {
         stage('cleanWs') {
             steps {
@@ -49,7 +49,9 @@ pipeline {
         }
         stage('Iamge Scan'){
             steps {
-                sh 'trivy image ${obito} >> app-report.txt'
+                sh ...
+                trivy image ${obito} >> app-report.txt
+                 ...
             }
         }
         stage('tag and push') {
@@ -62,11 +64,11 @@ pipeline {
                 }
             }
         }
-        // stage('Cluster-update') {
-        //     steps {
-        //         sh 'aws eks update-kubeconfig --region us-east-1 --name obito-cluster'
-        //     }
-        // }
+        stage('Cluster-update') {
+            steps {
+                sh 'aws eks update-kubeconfig --region us-east-1 --name 'obito-cluster''
+            }
+        }
         stage('Deploying EKS cluster') {
             steps {
                 withKubeConfig(caCertificate: '', clusterName: ' obito-cluster', contextName: '', credentialsId: 'kube', namespace: 'obito', restrictKubeConfigAccess: false, serverUrl: 'https://25A46D23363173D176599E57083115DC.gr7.us-east-1.eks.amazonaws.com') {
