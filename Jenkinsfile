@@ -64,19 +64,19 @@ pipeline {
         stage('Deploying EKS cluster') {
             steps {
                 withKubeConfig(caCertificate: '', clusterName: ' obito-cluster', contextName: '', credentialsId: 'kube', namespace: 'obito', restrictKubeConfigAccess: false, serverUrl: 'https://25A46D23363173D176599E57083115DC.gr7.us-east-1.eks.amazonaws.com') {
-                     sh '''
+                     sh """
                         sed -i 's|replace|${obito}|g' Deployment.yml
                         grep image Deployment.yml
                         kubectl apply -f Deployment.yml -n ${NAMESPACE}
-                        '''
+                        """
                 }
             }
         }
         stage('Verify the deployment') {
             steps {
                 withKubeConfig(caCertificate: '', clusterName: ' obito-cluster', contextName: '', credentialsId: 'kube', namespace: 'obito', restrictKubeConfigAccess: false, serverUrl: 'https://25A46D23363173D176599E57083115DC.gr7.us-east-1.eks.amazonaws.com') {
-                   sh "kubectl get pods -n ${NAMESPACE}"
-                    sh "kubectl get svc -n ${NAMESPACE}"
+                   sh 'kubectl get pods -n ${NAMESPACE}'
+                    sh 'kubectl get svc -n ${NAMESPACE}'
                 }
             }
         }
