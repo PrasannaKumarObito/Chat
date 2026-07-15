@@ -38,32 +38,32 @@ pipeline {
                 waitForQualityGate abortPipeline: false, credentialsId: 'Sonar'
             }
         }
-    //     stage('Build Image') {
-    //         steps {
-    //             sh """
-    //                 printenv
-    //                 docker build -t ${IMAGE} .
-    //             """
-    //         }
-    //     }
-    //     stage('Image Scan') {
-    //         steps {
-    //             sh """
-    //                 trivy image ${IMAGE} > app-report.txt
-    //             """
-    //         }
-    //     }
-    //     stage('Push Image') {
-    //         steps {
-    //             script {
-    //                 withDockerRegistry(credentialsId: 'Docker') {
-    //                     sh """
-    //                         docker push ${IMAGE}
-    //                     """
-    //                 }
-    //             }
-    //         }
-    //     }
+        stage('Build Image') {
+            steps {
+                sh """
+                    printenv
+                    docker build -t ${IMAGE} .
+                """
+            }
+        }
+        stage('Image Scan') {
+            steps {
+                sh """
+                    trivy image ${IMAGE} > app-report.txt
+                """
+            }
+        }
+        stage('Push Image') {
+            steps {
+                script {
+                    withDockerRegistry(credentialsId: 'Docker') {
+                        sh """
+                            docker push ${IMAGE}
+                        """
+                    }
+                }
+            }
+        }
     //     stage('Deploy to EKS') {
     //         steps {
     //             withKubeConfig(
