@@ -2,7 +2,7 @@ pipeline {
     agent any
 
    environment {
-    Iamge = "obitomanu/yuvi:AI-Chat-${GIT_COMMIT}"
+    Image = "obitomanu/yuvi:AI-Chat-${GIT_COMMIT}"
     NAMESPACE = "obito"
 }
     stages {
